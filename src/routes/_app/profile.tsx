@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/app/PageHeader";
-import { Award, Github, Linkedin, Mail, MapPin, Pencil } from "lucide-react";
+import { Award, Mail, MapPin, Pencil, Link2 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/profile")({
   component: ProfilePage,
@@ -32,8 +32,8 @@ function ProfilePage() {
             <div className="mt-3 flex flex-wrap gap-4 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-1.5"><Mail className="h-4 w-4" /> aditya@example.com</span>
               <span className="inline-flex items-center gap-1.5"><MapPin className="h-4 w-4" /> Chennai, India</span>
-              <a href="#" className="inline-flex items-center gap-1.5 hover:text-foreground"><Github className="h-4 w-4" /> github.com/aditya</a>
-              <a href="#" className="inline-flex items-center gap-1.5 hover:text-foreground"><Linkedin className="h-4 w-4" /> linkedin.com/in/aditya</a>
+              <a href="#" className="inline-flex items-center gap-1.5 hover:text-foreground"><Link2 className="h-4 w-4" /> github.com/aditya</a>
+              <a href="#" className="inline-flex items-center gap-1.5 hover:text-foreground"><Link2 className="h-4 w-4" /> linkedin.com/in/aditya</a>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4 text-center">
