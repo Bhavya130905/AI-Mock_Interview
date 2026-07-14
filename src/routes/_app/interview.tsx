@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageHeader } from "@/components/app/PageHeader";
+import InterviewSetup from "@/components/interview/setup/InterviewSetup";
 import { Mic, Video, MessageSquare, Play, ChevronRight, Star } from "lucide-react";
 
 export const Route = createFileRoute("/_app/interview")({
@@ -53,46 +54,17 @@ function InterviewPage() {
     return (
       <>
         <PageHeader
-          title={<>AI <span className="text-gradient">Mock Interview</span></>}
-          subtitle="Practice with an AI interviewer and get instant feedback."
+          title={
+            <>
+              AI <span className="text-gradient">Mock Interview</span>
+            </>
+          }
+          subtitle="Choose your interview preferences."
         />
 
-        <div className="grid md:grid-cols-3 gap-4">
-          {tracks.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setStarted(true)}
-              className="glass rounded-2xl p-6 text-left hover:bg-white/5 transition-all group"
-            >
-              <div className="grid h-12 w-12 place-items-center rounded-xl btn-primary">
-                <t.icon className="h-5 w-5" />
-              </div>
-              <div className="mt-4 font-semibold">{t.title}</div>
-              <div className="text-xs text-muted-foreground mt-1">{t.desc}</div>
-              <div className="mt-4 inline-flex items-center gap-1 text-sm text-primary-glow">
-                Start <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </button>
-          ))}
-        </div>
+        <InterviewSetup 
+        onStart={() => setStarted(true)} />
 
-        <div className="mt-10">
-          <h2 className="font-semibold mb-4">Past sessions</h2>
-          <div className="space-y-3">
-            {past.map((p) => (
-              <div key={p.title} className="glass rounded-2xl p-4 flex items-center justify-between">
-                <div>
-                  <div className="text-sm font-medium">{p.title}</div>
-                  <div className="text-xs text-muted-foreground">{p.date}</div>
-                </div>
-                <div className={`flex items-center gap-1 font-semibold ${p.tone}`}>
-                  <Star className="h-4 w-4 fill-current" />
-                  {p.score}/10
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </>
     );
   }
