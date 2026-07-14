@@ -1,75 +1,51 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { CheckCircle2, Circle, PlayCircle, BookOpen, Video, Code2 } from "lucide-react";
+import { generateRoadmap } from "@/lib/career-utils";
 
+// ---- Route ----
 export const Route = createFileRoute("/_app/roadmap")({
   component: RoadmapPage,
   head: () => ({ meta: [{ title: "Roadmap — CareerPilot AI" }] }),
 });
 
-type Step = { id: string; title: string; type: "read" | "video" | "code"; hours: number; done?: boolean };
-type Phase = { title: string; weeks: string; steps: Step[] };
-
-const initialPhases: Phase[] = [
-  {
-    title: "Foundations",
-    weeks: "Weeks 1–2",
-    steps: [
-      { id: "1", title: "JavaScript deep dive: closures, async, prototypes", type: "read", hours: 6, done: true },
-      { id: "2", title: "Git & GitHub workflows", type: "video", hours: 2, done: true },
-      { id: "3", title: "HTML/CSS layout patterns", type: "code", hours: 4, done: true },
-    ],
-  },
-  {
-    title: "Core CS",
-    weeks: "Weeks 3–5",
-    steps: [
-      { id: "4", title: "Arrays, strings, hash maps (30 problems)", type: "code", hours: 15, done: true },
-      { id: "5", title: "Trees & Graphs (traversals, BFS/DFS)", type: "code", hours: 12, done: false },
-      { id: "6", title: "Dynamic Programming patterns", type: "video", hours: 8, done: false },
-    ],
-  },
-  {
-    title: "System Design",
-    weeks: "Weeks 6–8",
-    steps: [
-      { id: "7", title: "Scalability, caching, load balancing", type: "read", hours: 6, done: false },
-      { id: "8", title: "Design URL shortener case study", type: "video", hours: 3, done: false },
-      { id: "9", title: "Design chat app — do it yourself", type: "code", hours: 5, done: false },
-    ],
-  },
-  {
-    title: "Placement Prep",
-    weeks: "Weeks 9–10",
-    steps: [
-      { id: "10", title: "Behavioral STAR framework", type: "read", hours: 2, done: false },
-      { id: "11", title: "5 mock interviews", type: "video", hours: 5, done: false },
-      { id: "12", title: "Company-specific prep (top 5 targets)", type: "code", hours: 8, done: false },
-    ],
-  },
-];
-
-const iconFor = { read: BookOpen, video: Video, code: Code2 } as const;
-
+// ---- Component ----
 function RoadmapPage() {
-  const [phases, setPhases] = useState(initialPhases);
+  // Read search params
+  const search = useSearch({ from: "/_app/roadmap" });
+  const goal = (search as any).goal || "swe";
+  const gaps = (search as any).gaps ? (search as any).gaps.split(',') : [];
+  const skills = (search as any).skills ? (search as any).skills.split(',') : [];
+
+  const [phases, setPhases] = useState(() => generateRoadmap(goal, gaps));
+
   const toggle = (pi: number, si: number) => {
-    setPhases((p) => p.map((ph, i) => i !== pi ? ph : ({
-      ...ph,
-      steps: ph.steps.map((s, j) => j === si ? { ...s, done: !s.done } : s),
-    })));
+    setPhases((p) =>
+      p.map((ph, i) =>
+        i !== pi
+          ? ph
+          : {
+              ...ph,
+              steps: ph.steps.map((s, j) =>
+                j === si ? { ...s, done: !s.done } : s
+              ),
+            }
+      )
+    );
   };
 
   const totalSteps = phases.reduce((a, p) => a + p.steps.length, 0);
   const doneSteps = phases.reduce((a, p) => a + p.steps.filter((s) => s.done).length, 0);
   const progress = Math.round((doneSteps / totalSteps) * 100);
 
+  const iconFor = { read: BookOpen, video: Video, code: Code2 } as const;
+
   return (
     <>
       <PageHeader
         title={<>Your personalized <span className="text-gradient">roadmap</span></>}
-        subtitle="AI-generated based on your goal: Software Engineer"
+        subtitle={`Based on your goal: ${goal}${skills.length ? ` · Skills: ${skills.join(', ')}` : ''}`}
       />
 
       <div className="glass rounded-2xl p-6 mb-8">
