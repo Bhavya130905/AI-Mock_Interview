@@ -4,32 +4,6 @@ import { PageHeader } from "@/components/app/PageHeader";
 import { Sparkles, CheckCircle2, XCircle, TrendingUp, ArrowRight } from "lucide-react";
 import { fetchSkillGap } from "@/lib/career-utils";
 
-// ---- Helper: mock AI gap analysis ----
-async function fetchSkillGap(goalId: string, userSkills: string[]) {
-  // This is a mock – replace with real API call later (Member 7)
-  const requiredSkillsMap: Record<string, string[]> = {
-    swe: ["JavaScript", "React", "Node.js", "SQL", "Git", "System Design", "DSA"],
-    ds: ["Python", "SQL", "Pandas", "ML Algorithms", "Deep Learning", "MLOps"],
-    pm: ["Communication", "Excel", "SQL for Analytics", "Product Metrics", "Roadmapping"],
-    ux: ["Figma", "User Research", "Prototyping", "Design Systems"],
-    cyber: ["Networking", "Pentesting", "Cloud Security"],
-    cloud: ["Linux", "Kubernetes", "AWS", "CI/CD"],
-  };
-  const required = requiredSkillsMap[goalId] || [];
-  const strengths = required.filter(skill =>
-    userSkills.some(us => us.toLowerCase() === skill.toLowerCase())
-  );
-  const gaps = required.filter(skill =>
-    !userSkills.some(us => us.toLowerCase() === skill.toLowerCase())
-  );
-  const gapData = gaps.map(name => ({
-    name,
-    level: Math.floor(Math.random() * 40) + 20, // mock confidence
-  }));
-  const recommendations = gaps.map(name => `Complete a course on "${name}" and build a project.`);
-  return { strengths, gaps: gapData, recommendations };
-}
-
 // ---- Route ----
 export const Route = createFileRoute("/_app/career-goal")({
   component: CareerGoalPage,
